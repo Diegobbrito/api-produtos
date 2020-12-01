@@ -41,6 +41,8 @@ public class ProdutoResource {
 	@GetMapping
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public List<Produto> listar() {
+		List<Produto> listaList = produtoRepository.findAll();
+		listaList.forEach(l -> System.out.println(l.getNome() + l.getFornecedor()));
 		return produtoRepository.findAll();
 	}
 

@@ -59,7 +59,9 @@ public class VendaResource {
 	public ResponseEntity<Venda> criar(
 			@ApiParam(name = "corpo", value = "Representação de uma nova venda") @Valid @RequestBody Venda venda,
 			HttpServletResponse response) {
-		Venda vendaSalva = vendaRepository.save(venda);
+		System.out.println(venda.getCliente().getId());
+		
+		Venda vendaSalva = vendaService.save(venda);
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(vendaSalva);
 	}

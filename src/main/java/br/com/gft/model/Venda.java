@@ -44,13 +44,13 @@ public class Venda {
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 	
-	@ApiModelProperty(value = "Lista de produtos", example = "5")
+	@ApiModelProperty(value = "Lista de produtos")
 	@NotNull
 	@ManyToMany
 	@JoinTable(
 	        name = "venda_produto",
 	        joinColumns = @JoinColumn(name = "venda_id"),
-	        inverseJoinColumns = @JoinColumn(name = "produto")
+	        inverseJoinColumns = @JoinColumn(name = "produto_id")
 	    )
 	private List<Produto> produtos;
 	

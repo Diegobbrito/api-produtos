@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,12 +34,7 @@ public class Fornecedor {
 	@NotNull
 	private String cnpj;
 
+	@JsonManagedReference
 	@OneToMany(mappedBy = "fornecedor")
-//	@ManyToMany
-//	@JoinTable(
-//	        name = "fornecedor_produto",
-//	        joinColumns = @JoinColumn(name = "fornecedor_id"),
-//	        inverseJoinColumns = @JoinColumn(name = "produto_id")
-//	    )
 	private List<Produto> produtos;
 }
