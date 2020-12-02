@@ -22,7 +22,6 @@ import br.com.gft.model.Produto;
 import br.com.gft.repository.ProdutoRepository;
 import br.com.gft.service.ProdutoService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -41,17 +40,37 @@ public class ProdutoResource {
 	@GetMapping
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public List<Produto> listar() {
-		List<Produto> listaList = produtoRepository.findAll();
-		listaList.forEach(l -> System.out.println(l.getNome() + l.getFornecedor()));
 		return produtoRepository.findAll();
+	}
+	
+	@ApiOperation("Listar os produtos em ordem alfabética crescente por nome")
+	@GetMapping("/asc")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> listarAsc() {
+		return produtoRepository.findAllOrderByNome();
+	}
+	
+	@ApiOperation("Listar os produtos em ordem alfabética decrescente por nome")
+	@GetMapping("/desc")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> listarDesc() {
+		return produtoRepository.findAllOrderByNomeDesc();
+	}
+	
+	@ApiOperation("Buscar produtos por nome")
+	@GetMapping("/nome/{nome}")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> buscarPorNome(@PathVariable String nome) {
+		return produtoRepository.findByNomeContaining(nome);
 	}
 
 	@ApiOperation("Buscar por ID")
 	@GetMapping("/{id}")
-	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public ResponseEntity<?> buscarPeloCodigo(
-			@ApiParam(value = "Codigo de um produto", example = "1") @PathVariable Long codigo) {
-		Produto produto = produtoRepository.findById(codigo).isPresent() ? produtoRepository.findById(codigo).get() : null;
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public ResponseEntity<Produto> buscarPeloId(
+			@ApiParam(value = "ID de um produto", example = "1") 
+			@PathVariable Long id) {
+		Produto produto = produtoRepository.findById(id).isPresent() ? produtoRepository.findById(id).get() : null;
 		return produto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(produto);
 	}
 
@@ -62,17 +81,17 @@ public class ProdutoResource {
 	public ResponseEntity<Produto> criar(
 			@ApiParam(name = "corpo", value = "Representação de uma nova pessoa") @Valid @RequestBody Produto produto,
 			HttpServletResponse response) {
-		Produto produtoSalvo = produtoRepository.save(produto);
+		Produto produtoSalvo = produtoService.save(produto);
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
 	}
 
 	@ApiOperation("Atualizar produto")
-	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@PutMapping("/{id}")
 	public ResponseEntity<Produto> atualizar(
 			@ApiParam(value = "ID de um produto", example = "1") @PathVariable Long id,
-			@ApiParam(name = "corpo", value = "Representação de uma pessoa com novos dados") @Valid @RequestBody Produto produto) {
+			@ApiParam(name = "corpo", value = "Representação de um produto com novos dados") @Valid @RequestBody Produto produto) {
 
 		Produto produtoSalvo = produtoService.atualizar(id, produto);
 
@@ -81,7 +100,7 @@ public class ProdutoResource {
 
 	@ApiOperation("Exclui produto")
 	@DeleteMapping("/{id}")
-	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@ApiParam(value = "Codigo de uma pessoa", example = "1") @PathVariable Long id) {
 		produtoRepository.deleteById(id);

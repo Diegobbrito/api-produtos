@@ -1,5 +1,7 @@
 package br.com.gft.service;
 
+import java.util.Random;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -12,7 +14,7 @@ import br.com.gft.repository.ProdutoRepository;
 
 @Service
 public class ProdutoService {
-	
+
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
@@ -25,10 +27,18 @@ public class ProdutoService {
 	}
 
 	private Produto buscarProdutoPeloId(Long id) {
-		Produto produtoSalvo = produtoRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
+		Produto produto = produtoRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
 
-		return produtoSalvo;
+		return produto;
 	}
 
+	public Produto save(@Valid Produto produto) {
+
+		Random gerador = new Random();
+		
+		produto.setCodigoProduto("#" + produto.getNome().trim().toUpperCase().replaceAll(" ", "") + gerador.hashCode());
+		
+		return produtoRepository.save(produto);
+	}
 
 }

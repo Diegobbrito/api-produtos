@@ -1,7 +1,6 @@
 package br.com.gft.resource;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -18,10 +17,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gft.model.Cliente;
+import br.com.gft.model.Produto;
 import br.com.gft.repository.ClienteRepository;
 import br.com.gft.service.ClienteService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -44,6 +43,27 @@ public class ClienteResource {
 	public List<Cliente> listar() {
 		return clienteRepository.findAll();
 	}
+	
+	@ApiOperation("Listar os clientes em ordem alfabética crescente por nome")
+	@GetMapping("/asc")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> listarAsc() {
+		return clienteRepository.findAllOrderByNome();
+	}
+	
+	@ApiOperation("Listar os clientes em ordem alfabética decrescente por nome")
+	@GetMapping("/desc")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> listarDesc() {
+		return clienteRepository.findAllOrderByNomeDesc();
+	}
+	
+	@ApiOperation("Buscar clientes por nome")
+	@GetMapping("/nome/{nome}")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> buscarPorNome(@PathVariable String nome) {
+		return clienteRepository.findByNomeContaining(nome);
+	}
 
 	@ApiOperation("Cria um novo cliente")
 	@PostMapping				
@@ -61,11 +81,11 @@ public class ClienteResource {
 
 	@ApiOperation("Busca um cliente pelo ID")
 	@GetMapping("/{id}")
-	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public ResponseEntity<?> buscarPeloCodigo(
-			@ApiParam(value = "Codigo de uma categoria", example = "1") @PathVariable Long codigo) {
-		Optional<Cliente> categoria = clienteRepository.findById(codigo);
-		return categoria.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(categoria);
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public ResponseEntity<Cliente> buscarPeloId(
+			@ApiParam(value = "Id de um cliente", example = "1") @PathVariable Long id) {
+		Cliente cliente = clienteRepository.findById(id).isPresent() ? clienteRepository.findById(id).get() : null;
+		return cliente == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(cliente);
 	}
 
 }

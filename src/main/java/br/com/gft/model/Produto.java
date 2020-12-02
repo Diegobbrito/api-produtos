@@ -23,7 +23,7 @@ import lombok.Setter;
 @Setter
 public class Produto {
 
-	@ApiModelProperty(value = "Codigo de um produto", example = "1")
+	@ApiModelProperty(value = "Id de um produto", example = "1")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;

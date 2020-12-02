@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gft.model.Fornecedor;
+import br.com.gft.model.Produto;
 import br.com.gft.repository.FornecedorRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,22 +39,42 @@ public class FornecedorResource {
 		return fornecedorRepository.findAll();
 	}
 
+	@ApiOperation("Listar os fornecedores em ordem alfabética crescente por nome")
+	@GetMapping("/asc")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> listarAsc() {
+		return fornecedorRepository.findAllOrderByNome();
+	}
+
+	@ApiOperation("Listar os fornecedores em ordem alfabética decrescente por nome")
+	@GetMapping("/desc")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> listarDesc() {
+		return fornecedorRepository.findAllOrderByNomeDesc();
+	}
+
+	@ApiOperation("Buscar fornecedores por nome")
+	@GetMapping("/nome/{nome}")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	public List<Produto> buscarPorNome(@PathVariable String nome) {
+		return fornecedorRepository.findByNomeContaining(nome);
+	}
+
 	@ApiOperation("Buscar por ID")
 	@GetMapping("/{id}")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<Fornecedor> buscarPeloCodigo(
 			@ApiParam(value = "ID de um fornecedor", example = "1") @PathVariable Long id) {
-		Fornecedor fornecedor = fornecedorRepository.findById(id).isPresent()
-				? fornecedorRepository.findById(id).get()
+		Fornecedor fornecedor = fornecedorRepository.findById(id).isPresent() ? fornecedorRepository.findById(id).get()
 				: null;
 		return fornecedor != null ? ResponseEntity.ok(fornecedor) : ResponseEntity.notFound().build();
 	}
-	
+
 	@ApiOperation("Inserir fornecedor")
-	@PostMapping				
+	@PostMapping
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Fornecedor> criar(		
+	public ResponseEntity<Fornecedor> criar(
 			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody Fornecedor fornecedor,
 			HttpServletResponse response) {
 		Fornecedor fornecedorSalvo = fornecedorRepository.save(fornecedor);
@@ -62,8 +83,6 @@ public class FornecedorResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(fornecedorSalvo);
 
 	}
-
-
 
 	@ApiOperation("Excluir fornecedor")
 	@DeleteMapping("/{id}")
