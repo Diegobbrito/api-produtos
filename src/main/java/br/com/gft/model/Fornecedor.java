@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.br.CNPJ;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -32,6 +34,7 @@ public class Fornecedor {
 	
 	@ApiModelProperty(value = "Cnpj de um fornecedor", example = "xx.xxx.xxx/xxxx-xx")
 	@NotNull
+	@CNPJ
 	private String cnpj;
 
 	@JsonManagedReference

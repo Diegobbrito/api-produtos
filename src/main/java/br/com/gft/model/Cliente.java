@@ -2,14 +2,17 @@ package br.com.gft.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.br.CPF;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -29,9 +32,9 @@ public class Cliente {
 	@NotNull
 	private String nome;
 	
-	@ApiModelProperty(value = "Email de um cliente", example = "email@gmail.com")
+	@ApiModelProperty(value = "Email de um cliente", example = "email@email.com")
 	@NotEmpty
-	@Size(min = 6)
+	@Email(message = "Email inválido")
 	private String email;
 	
 	@NotEmpty
@@ -39,6 +42,8 @@ public class Cliente {
 	
 	@ApiModelProperty(value = "CPF de um cliente", example = "xxx.xxx.xx-xx")
 	@NotEmpty
+	@CPF
+	@Column(unique = true)
 	private String documento;
 	
 	private LocalDate dataCadastro;

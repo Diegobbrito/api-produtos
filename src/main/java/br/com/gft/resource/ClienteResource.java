@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gft.model.Cliente;
 import br.com.gft.repository.ClienteRepository;
+import br.com.gft.service.ClienteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +32,9 @@ public class ClienteResource {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
 
 //	@Autowired
 //	private ApplicationEventPublisher publisher;
@@ -48,7 +52,7 @@ public class ClienteResource {
 	public ResponseEntity<Cliente> criar(		
 			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody Cliente cliente,
 			HttpServletResponse response) {
-		Cliente clienteSalvo = clienteRepository.save(cliente);
+		Cliente clienteSalvo = clienteService.save(cliente);
 
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, clienteSalvo.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
