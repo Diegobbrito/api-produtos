@@ -79,10 +79,10 @@ public class ProdutoResource {
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Produto> criar(
-			@ApiParam(name = "corpo", value = "Representação de uma nova pessoa") @Valid @RequestBody Produto produto,
+			@ApiParam(name = "corpo", value = "Representação de uma nova pessoa") @RequestBody Produto produto,
 			HttpServletResponse response) {
 		Produto produtoSalvo = produtoService.save(produto);
-//		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
+//		publisher.publishEvent(new RecursoCriadoEve nt(this, response, pessoaSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
 	}
 

@@ -6,17 +6,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import br.com.gft.model.Fornecedor;
-import br.com.gft.model.Produto;
 
 public interface FornecedorRepository extends JpaRepository<Fornecedor, Long>{
 
 	@Query(value = "SELECT * FROM FORNECEDOR order by nome", nativeQuery = true)
-    List<Produto> findAllOrderByNome();
+    List<Fornecedor> findAllOrderByNome();
 	
 	@Query(value = "SELECT * FROM FORNECEDOR order by nome desc", nativeQuery = true)
-	List<Produto> findAllOrderByNomeDesc();
+	List<Fornecedor> findAllOrderByNomeDesc();
 	
-	List<Produto> findByNomeContaining(String nome);
+	List<Fornecedor> findByNomeContaining(String nome);
 	
 }
  

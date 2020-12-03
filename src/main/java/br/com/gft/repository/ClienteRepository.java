@@ -6,16 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import br.com.gft.model.Cliente;
-import br.com.gft.model.Produto;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
 	@Query(value = "SELECT * FROM CLIENTE order by nome", nativeQuery = true)
-    List<Produto> findAllOrderByNome();
+    List<Cliente> findAllOrderByNome();
 	
-	@Query(value = "SELECT * FROM PRODUTO CLIENTE by nome desc", nativeQuery = true)
-	List<Produto> findAllOrderByNomeDesc();
+	@Query(value = "SELECT * FROM CLIENTE order by nome desc", nativeQuery = true)
+	List<Cliente> findAllOrderByNomeDesc();
 	
-	List<Produto> findByNomeContaining(String nome);
+	List<Cliente> findByNomeContaining(String nome);
 }
  

@@ -33,6 +33,8 @@ public class ProdutoService {
 	}
 
 	public Produto save(@Valid Produto produto) {
+		
+		if(produto.getValorPromo() == null && !produto.isPromocao()) produto.setValorPromo(produto.getValor());
 
 		Random gerador = new Random();
 		

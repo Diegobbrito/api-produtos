@@ -12,14 +12,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gft.model.Fornecedor;
-import br.com.gft.model.Produto;
 import br.com.gft.repository.FornecedorRepository;
+import br.com.gft.service.FornecedorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -31,6 +32,9 @@ public class FornecedorResource {
 
 	@Autowired
 	private FornecedorRepository fornecedorRepository;
+	
+	@Autowired
+	private FornecedorService fornecedorService;
 
 	@ApiOperation("Listar todos os fornecedores")
 	@GetMapping
@@ -42,21 +46,21 @@ public class FornecedorResource {
 	@ApiOperation("Listar os fornecedores em ordem alfabética crescente por nome")
 	@GetMapping("/asc")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public List<Produto> listarAsc() {
+	public List<Fornecedor> listarAsc() {
 		return fornecedorRepository.findAllOrderByNome();
 	}
 
 	@ApiOperation("Listar os fornecedores em ordem alfabética decrescente por nome")
 	@GetMapping("/desc")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public List<Produto> listarDesc() {
+	public List<Fornecedor> listarDesc() {
 		return fornecedorRepository.findAllOrderByNomeDesc();
 	}
 
 	@ApiOperation("Buscar fornecedores por nome")
 	@GetMapping("/nome/{nome}")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public List<Produto> buscarPorNome(@PathVariable String nome) {
+	public List<Fornecedor> buscarPorNome(@PathVariable String nome) {
 		return fornecedorRepository.findByNomeContaining(nome);
 	}
 
@@ -75,21 +79,33 @@ public class FornecedorResource {
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Fornecedor> criar(
-			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody Fornecedor fornecedor,
+			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @RequestBody Fornecedor fornecedor,
 			HttpServletResponse response) {
-		Fornecedor fornecedorSalvo = fornecedorRepository.save(fornecedor);
+		Fornecedor fornecedorSalvo = fornecedorService.save(fornecedor);
 
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, clienteSalvo.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(fornecedorSalvo);
 
+	}
+	
+	@ApiOperation("Atualizar fornecedor")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+	@PutMapping("/{id}")
+	public ResponseEntity<Fornecedor> atualizar(
+			@ApiParam(example = "1") @PathVariable Long id,
+			@ApiParam(name = "corpo", value = "Representação de um fornecedor com novos dados") @Valid @RequestBody Fornecedor fornecedor) {
+
+		Fornecedor fornecedorSalvo = fornecedorService.atualizar(id, fornecedor);
+
+		return ResponseEntity.ok(fornecedorSalvo);
 	}
 
 	@ApiOperation("Excluir fornecedor")
 	@DeleteMapping("/{id}")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@ApiParam(value = "Codigo de um lancamento", example = "1") @PathVariable Long codigo) {
-		fornecedorRepository.deleteById(codigo);
+	public void remover(@ApiParam(example = "1") @PathVariable Long id) {
+		fornecedorRepository.deleteById(id);
 	}
 
 }
