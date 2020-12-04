@@ -38,7 +38,7 @@ public class ProdutoService {
 
 		Random gerador = new Random();
 		
-		produto.setCodigoProduto("#" + produto.getNome().trim().toUpperCase().replaceAll(" ", "") + gerador.hashCode());
+		produto.setCodigoProduto("#" + gerador.hashCode());
 		
 		return produtoRepository.save(produto);
 	}

@@ -2,7 +2,6 @@ package br.com.gft.model;
 
 import java.math.BigDecimal;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -62,7 +61,7 @@ public class Produto {
 	@ApiModelProperty(value = "Id do fornecedor de um produto", example = "1")
 	@NotNull
 	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "id_fornecedor")
 	private Fornecedor fornecedor;
 

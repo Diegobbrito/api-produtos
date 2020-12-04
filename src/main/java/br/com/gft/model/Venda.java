@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -41,13 +40,13 @@ public class Venda {
 	
 	@ApiModelProperty(value = "Id de um cliente", example = "1")
 	@NotNull
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 	
 	@ApiModelProperty(value = "Lista de produtos")
 	@NotNull
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	@JoinTable(
 	        name = "venda_produto",
 	        joinColumns = @JoinColumn(name = "venda_id"),

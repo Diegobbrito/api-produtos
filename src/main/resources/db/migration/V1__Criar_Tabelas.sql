@@ -3,10 +3,9 @@ create table fornecedor (id bigint not null auto_increment, cnpj varchar(255) no
 create table produto (id bigint not null auto_increment, categoria varchar(255) not null, codigo_produto varchar(255), imagem varchar(255) not null, nome varchar(255) not null, promocao bit not null, quantidade bigint not null, valor decimal(19,2) not null, valor_promo decimal(19,2) not null, id_fornecedor bigint not null, primary key (id)) engine=InnoDB;
 create table venda (id bigint not null auto_increment, data_compra datetime(6), total_compra decimal(19,2), cliente_id bigint not null, fornecedor_id bigint not null, primary key (id)) engine=InnoDB;
 create table venda_produto (venda_id bigint not null, produto_id bigint not null) engine=InnoDB;
-alter table cliente drop index UK_g18g15ijpoftfxm5v87awpbym;
 alter table cliente add constraint UK_g18g15ijpoftfxm5v87awpbym unique (documento);
-alter table produto add constraint FKg0kbs9pp5getbcfp892wf3y1c foreign key (id_fornecedor) references fornecedor (id);
-alter table venda add constraint FK50murhuotq9h2dnxej317jjiy foreign key (cliente_id) references cliente (id);
-alter table venda add constraint FK29grb6hh30perue3v1btueq6d foreign key (fornecedor_id) references fornecedor (id);
-alter table venda_produto add constraint FK4go8k4gnl96q60tpreyxc1d88 foreign key (produto_id) references produto (id);
-alter table venda_produto add constraint FKonh0ak31073oc57xyeu2etdx4 foreign key (venda_id) references venda (id);
+alter table produto add constraint FKg0kbs9pp5getbcfp892wf3y1c foreign key (id_fornecedor) references fornecedor (id) ON DELETE CASCADE;
+alter table venda add constraint FK50murhuotq9h2dnxej317jjiy foreign key (cliente_id) references cliente (id) ON DELETE CASCADE;
+alter table venda add constraint FK29grb6hh30perue3v1btueq6d foreign key (fornecedor_id) references fornecedor (id) ON DELETE CASCADE;
+alter table venda_produto add constraint FK4go8k4gnl96q60tpreyxc1d88 foreign key (produto_id) references produto (id) ON DELETE CASCADE;
+alter table venda_produto add constraint FKonh0ak31073oc57xyeu2etdx4 foreign key (venda_id) references venda (id) ON DELETE CASCADE;

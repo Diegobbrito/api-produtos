@@ -2,7 +2,6 @@ package br.com.gft.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +38,6 @@ public class Fornecedor {
 	private String cnpj;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "fornecedor")
 	private List<Produto> produtos;
 }
