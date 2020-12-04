@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.gft.dto.request.FornecedorRequestDTO;
+import br.com.gft.dto.response.FornecedorResponseDTO;
 import br.com.gft.model.Fornecedor;
 import br.com.gft.repository.FornecedorRepository;
 import br.com.gft.service.FornecedorService;
@@ -78,13 +80,13 @@ public class FornecedorResource {
 	@PostMapping
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Fornecedor> criar(
-			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @RequestBody Fornecedor fornecedor,
+	public ResponseEntity<FornecedorResponseDTO> criar(
+			@ApiParam(name = "corpo", value = "Representação de um novo cliente")@Valid @RequestBody FornecedorRequestDTO fornecedor,
 			HttpServletResponse response) {
-		Fornecedor fornecedorSalvo = fornecedorService.save(fornecedor);
+		Fornecedor fornecedorSalvo = fornecedorService.save(fornecedor.build());
 
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, clienteSalvo.getCodigo()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(fornecedorSalvo);
+		return new ResponseEntity<>(FornecedorResponseDTO.response(fornecedorSalvo), HttpStatus.CREATED);
 
 	}
 	

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.gft.dto.request.ProdutoRequestDTO;
 import br.com.gft.model.Produto;
 import br.com.gft.repository.ProdutoRepository;
 import br.com.gft.service.ProdutoService;
@@ -79,10 +80,10 @@ public class ProdutoResource {
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Produto> criar(
-			@ApiParam(name = "corpo", value = "Representação de uma nova pessoa") @RequestBody Produto produto,
+			@ApiParam(name = "corpo", value = "Representação de um novo produto") @Valid @RequestBody ProdutoRequestDTO produto,
 			HttpServletResponse response) {
-		Produto produtoSalvo = produtoService.save(produto);
-//		publisher.publishEvent(new RecursoCriadoEve nt(this, response, pessoaSalva.getCodigo()));
+		Produto produtoSalvo = produtoService.save(produto.build());
+//		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
 	}
 

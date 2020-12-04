@@ -8,19 +8,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.br.CNPJ;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "fornecedor")
 @Getter @Setter
+@Accessors(chain = true)
 public class Fornecedor {
 	
 	@ApiModelProperty(value = "Codigo de um produto", example = "1")
@@ -29,12 +28,9 @@ public class Fornecedor {
 	private long id;
 	
 	@ApiModelProperty(value = "Nome de um fornecedor", example = "Amazon")
-	@NotNull
 	private String nome;
 	
 	@ApiModelProperty(value = "Cnpj de um fornecedor", example = "xx.xxx.xxx/xxxx-xx")
-	@NotNull
-	@CNPJ
 	private String cnpj;
 
 	@JsonManagedReference

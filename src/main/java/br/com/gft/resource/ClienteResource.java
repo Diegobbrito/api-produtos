@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.gft.dto.request.ClienteRequestDTO;
+import br.com.gft.dto.response.ClienteResponseDTO;
 import br.com.gft.model.Cliente;
 import br.com.gft.repository.ClienteRepository;
 import br.com.gft.service.ClienteService;
@@ -69,14 +71,13 @@ public class ClienteResource {
 	@ApiOperation("Cria um novo cliente")
 	@PostMapping				
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Cliente> criar(		
-			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody Cliente cliente,
+	public ResponseEntity<ClienteResponseDTO> criar(		
+			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody ClienteRequestDTO cliente,
 			HttpServletResponse response) {
-		Cliente clienteSalvo = clienteService.save(cliente);
-
+		Cliente clienteSalvo = clienteService.save(cliente.build());
+		
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, clienteSalvo.getCodigo()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
+		return new ResponseEntity<>(ClienteResponseDTO.response(clienteSalvo), HttpStatus.CREATED);
 
 	}
 
