@@ -4,8 +4,11 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import br.com.gft.model.Fornecedor;
 import br.com.gft.model.Produto;
+import br.com.gft.repository.FornecedorRepository;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +18,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdutoRequestDTO {
+	
+	@Autowired
+	FornecedorRepository fornecedorRepository;
 				
 	@ApiModelProperty(value = "Nome de um produto", example = "Produdo X")
 	@NotNull
@@ -46,9 +52,11 @@ public class ProdutoRequestDTO {
 
 	@ApiModelProperty(value = "Id do fornecedor de um produto", example = "1")
 	@NotNull
-	private Fornecedor fornecedor;
+	private FornecedorInput fornecedor;
 		
 		public Produto build() {	
+			System.out.println(fornecedor.getId());
+			Fornecedor f = fornecedorRepository.findById(fornecedor.getId()).get();
 			Produto produto = new Produto()
 					.setNome(this.nome)
 					.setValor(this.valor)
@@ -57,7 +65,7 @@ public class ProdutoRequestDTO {
 					.setCategoria(this.categoria)
 					.setImagem(this.imagem)
 					.setQuantidade(this.quantidade)
-					.setFornecedor(this.fornecedor);
+					.setFornecedor(f);
 			return produto;
 		}
 
