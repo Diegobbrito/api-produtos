@@ -52,11 +52,14 @@ public class ProdutoRequestDTO {
 
 	@ApiModelProperty(value = "Id do fornecedor de um produto", example = "1")
 	@NotNull
-	private FornecedorInput fornecedor;
+	private FornecedorId fornecedor;
 		
 		public Produto build() {	
 			System.out.println(fornecedor.getId());
-			Fornecedor f = fornecedorRepository.findById(fornecedor.getId()).get();
+			Fornecedor f = null;
+			if(fornecedorRepository.findById(fornecedor.getId()).isPresent())
+					f = fornecedorRepository.findById(fornecedor.getId()).get();
+
 			Produto produto = new Produto()
 					.setNome(this.nome)
 					.setValor(this.valor)
