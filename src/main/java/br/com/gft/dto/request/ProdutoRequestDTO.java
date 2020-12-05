@@ -4,11 +4,8 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.gft.dto.request.Input.FornecedorId;
 
-import br.com.gft.model.Fornecedor;
-import br.com.gft.model.Produto;
-import br.com.gft.repository.FornecedorRepository;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdutoRequestDTO {
-	
-	@Autowired
-	FornecedorRepository fornecedorRepository;
 				
-	@ApiModelProperty(value = "Nome de um produto", example = "Produdo X")
+	@ApiModelProperty( example = "Produto X")
 	@NotNull
 	private String nome;
 
@@ -38,11 +32,11 @@ public class ProdutoRequestDTO {
 	@NotNull
 	private BigDecimal valorPromo;
 
-	@ApiModelProperty(value = "Categoria de um produto", example = "Eletronico")
+	@ApiModelProperty(value = "Categoria de um produto", example = "Eletrônico")
 	@NotNull
 	private String categoria;
 
-	@ApiModelProperty(value = "Imagem de um produto", example = "imagem.jpg")
+	@ApiModelProperty(example = "imagem.jpg")
 	@NotNull
 	private String imagem;
 
@@ -50,26 +44,5 @@ public class ProdutoRequestDTO {
 	@NotNull
 	private long quantidade;
 
-	@ApiModelProperty(value = "Id do fornecedor de um produto", example = "1")
-	@NotNull
 	private FornecedorId fornecedor;
-		
-		public Produto build() {	
-			System.out.println(fornecedor.getId());
-			Fornecedor f = null;
-			if(fornecedorRepository.findById(fornecedor.getId()).isPresent())
-					f = fornecedorRepository.findById(fornecedor.getId()).get();
-
-			Produto produto = new Produto()
-					.setNome(this.nome)
-					.setValor(this.valor)
-					.setPromocao(this.promocao)
-					.setValorPromo(this.valorPromo)
-					.setCategoria(this.categoria)
-					.setImagem(this.imagem)
-					.setQuantidade(this.quantidade)
-					.setFornecedor(f);
-			return produto;
-		}
-
 }

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.validation.Valid;
 
+import br.com.gft.repository.FornecedorRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +18,10 @@ public class ProdutoService {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
+
+	@Autowired
+	private FornecedorRepository fornecedorRepository;
+
 
 	public Produto atualizar(Long id, @Valid Produto produto) {
 		Produto produtoSalvo = buscarProdutoPeloId(id);
@@ -39,8 +44,7 @@ public class ProdutoService {
 		Random gerador = new Random();
 		
 		produto.setCodigoProduto("#" + gerador.hashCode());
-		
+
 		return produtoRepository.save(produto);
 	}
-
 }

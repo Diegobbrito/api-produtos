@@ -1,10 +1,20 @@
 package br.com.gft.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import br.com.gft.dto.request.ProdutoRequestDTO;
+import br.com.gft.dto.request.VendaRequestDTO;
+import br.com.gft.dto.response.VendaResponseDTO;
+import br.com.gft.model.Cliente;
+import br.com.gft.model.Fornecedor;
+import br.com.gft.model.Produto;
+import br.com.gft.repository.ClienteRepository;
+import br.com.gft.repository.FornecedorRepository;
+import br.com.gft.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,60 +40,98 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api/vendas")
 public class VendaResource {
 
-	@Autowired
-	private VendaRepository vendaRepository;
-	
-	@Autowired
-	private VendaService vendaService;
+    @Autowired
+    private VendaRepository vendaRepository;
 
-	@ApiOperation("Listar todas as vendas")
-	@GetMapping
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public List<Venda> listar() {
-		return vendaRepository.findAll();
-	}
+    @Autowired
+    private ClienteRepository clienteRepository;
 
-	@ApiOperation("Buscar por ID")
-	@GetMapping("/{id}")
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public ResponseEntity<?> buscarPeloCodigo(
-			@ApiParam(value = "Codigo de uma venda", example = "1") @PathVariable Long id) {
-		Venda venda = vendaRepository.findById(id).isPresent() ? vendaRepository.findById(id).get() : null;
-		return venda == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(venda);
-	}
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
 
-	@ApiOperation("Inserir venda")
-	@PostMapping
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private VendaService vendaService;
+
+    @ApiOperation("Listar todas as vendas")
+    @GetMapping
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Venda> criar(
-			@ApiParam(name = "corpo", value = "Representação de uma nova venda") @Valid @RequestBody Venda venda,
-			HttpServletResponse response) {
-		System.out.println(venda.getCliente().getId());
-		
-		Venda vendaSalva = vendaService.save(venda);
+    public List<Venda> listar() {
+        return vendaRepository.findAll();
+    }
+
+    @ApiOperation("Buscar por ID")
+    @GetMapping("/{id}")
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+    public ResponseEntity<?> buscarPeloCodigo(
+            @ApiParam(value = "Codigo de uma venda", example = "1") @PathVariable Long id) {
+        Venda venda = vendaRepository.findById(id).isPresent() ? vendaRepository.findById(id).get() : null;
+        return venda == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(venda);
+    }
+
+    @ApiOperation("Inserir venda")
+    @PostMapping
+//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<VendaResponseDTO> criar(
+            @ApiParam(name = "corpo", value = "Representação de uma nova venda") @Valid @RequestBody VendaRequestDTO vendaRequestDTO,
+            HttpServletResponse response) {
+        Venda venda = toDomainObject(vendaRequestDTO);
+
+        Venda vendaSalva = vendaService.save(venda);
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(vendaSalva);
-	}
+        return new ResponseEntity<>(VendaResponseDTO.response(vendaSalva),HttpStatus.CREATED);
+    }
 
-	@ApiOperation("Atualizar venda")
+    @ApiOperation("Atualizar venda")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	@PutMapping("/{id}")
-	public ResponseEntity<Venda> atualizar(
-			@ApiParam(value = "ID de um produto", example = "1") @PathVariable Long id,
-			@ApiParam(name = "corpo", value = "Representação de uma venda com novos dados") @Valid @RequestBody Venda venda) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Venda> atualizar(
+            @ApiParam(value = "ID de um produto", example = "1") @PathVariable Long id,
+            @ApiParam(name = "corpo", value = "Representação de uma venda com novos dados") @Valid @RequestBody Venda venda) {
 
-		Venda vendaSalva = vendaService.atualizar(id, venda);
+        Venda vendaSalva = vendaService.atualizar(id, venda);
 
-		return ResponseEntity.ok(vendaSalva);
-	}
+        return ResponseEntity.ok(vendaSalva);
+    }
 
-	@ApiOperation("Exclui produto")
-	@DeleteMapping("/{id}")
+    @ApiOperation("Exclui venda")
+    @DeleteMapping("/{id}")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@ApiParam(value = "ID de um produto", example = "1") @PathVariable Long id) {
-		vendaRepository.deleteById(id);
-	}
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@ApiParam(value = "ID de uma venda", example = "1") @PathVariable Long id) {
+        vendaRepository.deleteById(id);
+    }
+
+    private Venda toDomainObject(VendaRequestDTO vendaRequestDTO) {
+
+        Venda venda = new Venda()
+                .setDataCompra(vendaRequestDTO.getDataCompra());
+
+        if (fornecedorRepository.findById(vendaRequestDTO.getFornecedor().getId()).isPresent()) {
+            Fornecedor fornecedor = fornecedorRepository.findById(vendaRequestDTO.getFornecedor().getId()).get();
+            venda.setFornecedor(fornecedor);
+        }
+
+        if (clienteRepository.findById(vendaRequestDTO.getCliente().getId()).isPresent()) {
+            Cliente cliente = clienteRepository.findById(vendaRequestDTO.getCliente().getId()).get();
+            venda.setCliente(cliente);
+        }
+
+        List<Produto> listProdutos = new ArrayList();
+        if (!vendaRequestDTO.getProdutos().isEmpty()) {
+            vendaRequestDTO.getProdutos().forEach(produtosId -> {
+                if (produtoRepository.findById(produtosId.getId()).isPresent()) {
+                    Produto produto = produtoRepository.findById(produtosId.getId()).get();
+                    listProdutos.add(produto);
+                }
+            });
+            venda.setProdutos(listProdutos);
+        }
+
+        return venda;
+    }
 
 }

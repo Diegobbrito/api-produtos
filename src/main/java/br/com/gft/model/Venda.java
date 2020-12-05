@@ -21,10 +21,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "venda")
 @Getter @Setter
+@Accessors(chain = true)
 public class Venda {
 	
 	@ApiModelProperty(value = "Codigo de um produto", example = "1")
@@ -58,7 +60,6 @@ public class Venda {
 	
 	@ApiModelProperty( example = "30/11/2020")
 	@Column(name = "data_compra")
-	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataCompra;
 
 }
