@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import br.com.gft.model.Produto;
 
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
-	@Query(value = "SELECT * FROM PRODUTO order by nome", nativeQuery = true)
+	@Query(value = "SELECT * FROM produto order by nome", nativeQuery = true)
     List<Produto> findAllOrderByNome();
 	
-	@Query(value = "SELECT * FROM PRODUTO order by nome desc", nativeQuery = true)
+	@Query(value = "SELECT * FROM produto order by nome desc", nativeQuery = true)
 	List<Produto> findAllOrderByNomeDesc();
 	
 	List<Produto> findByNomeContaining(String nome);

@@ -49,6 +49,7 @@ public class FornecedorResource {
 	@GetMapping("/asc")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public List<Fornecedor> listarAsc() {
+
 		return fornecedorRepository.findAllOrderByNome();
 	}
 

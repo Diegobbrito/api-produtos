@@ -9,10 +9,10 @@ import br.com.gft.model.Fornecedor;
 
 public interface FornecedorRepository extends JpaRepository<Fornecedor, Long>{
 
-	@Query(value = "SELECT * FROM FORNECEDOR order by nome", nativeQuery = true)
+	@Query(value = "SELECT * FROM fornecedor order by nome", nativeQuery = true)
     List<Fornecedor> findAllOrderByNome();
 	
-	@Query(value = "SELECT * FROM FORNECEDOR order by nome desc", nativeQuery = true)
+	@Query(value = "SELECT * FROM fornecedor order by nome desc", nativeQuery = true)
 	List<Fornecedor> findAllOrderByNomeDesc();
 	
 	List<Fornecedor> findByNomeContaining(String nome);

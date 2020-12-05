@@ -9,10 +9,10 @@ import br.com.gft.model.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-	@Query(value = "SELECT * FROM CLIENTE order by nome", nativeQuery = true)
+	@Query(value = "SELECT * FROM cliente order by nome", nativeQuery = true)
     List<Cliente> findAllOrderByNome();
 	
-	@Query(value = "SELECT * FROM CLIENTE order by nome desc", nativeQuery = true)
+	@Query(value = "SELECT * FROM cliente order by nome desc", nativeQuery = true)
 	List<Cliente> findAllOrderByNomeDesc();
 	
 	List<Cliente> findByNomeContaining(String nome);
