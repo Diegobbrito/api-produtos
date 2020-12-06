@@ -82,7 +82,7 @@ public class VendaResource {
 
         Venda vendaSalva = vendaService.save(venda);
 //		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
-        return new ResponseEntity<>(VendaResponseDTO.response(vendaSalva),HttpStatus.CREATED);
+        return new ResponseEntity<>(VendaResponseDTO.response(vendaSalva), HttpStatus.CREATED);
     }
 
     @ApiOperation("Atualizar venda")
@@ -122,12 +122,20 @@ public class VendaResource {
 
         List<Produto> listProdutos = new ArrayList();
         if (!vendaRequestDTO.getProdutos().isEmpty()) {
-            vendaRequestDTO.getProdutos().forEach(produtosId -> {
-                if (produtoRepository.findById(produtosId.getId()).isPresent()) {
-                    Produto produto = produtoRepository.findById(produtosId.getId()).get();
-                    listProdutos.add(produto);
-                }
-            });
+            vendaRequestDTO.getProdutos()
+                    .stream().filter(produtosId -> produtoRepository.findById(produtosId.getId()).isPresent())
+                    .map(produtosId -> produtoRepository.findById(produtosId.getId()).get())
+                    .forEach(produto -> {
+                        if (produto.getFornecedor().getId() == vendaRequestDTO.getFornecedor().getId())
+                            listProdutos.add(produto);
+                        else {
+                            try {
+                                throw new Exception();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
             venda.setProdutos(listProdutos);
         }
 
