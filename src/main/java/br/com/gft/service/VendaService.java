@@ -24,25 +24,10 @@ public class VendaService {
 	private ProdutoRepository produtoRepository;
 	
 	BigDecimal totalCompra = BigDecimal.ZERO;
-
-	public Venda atualizar(Long id, @Valid Venda venda) {
-		Venda vendaSalva = buscarVendaPeloId(id);
-
-		BeanUtils.copyProperties(venda, vendaSalva, "id");
-
-		return vendaRepository.save(vendaSalva);
-	}
-
-	private Venda buscarVendaPeloId(Long id) {
-		Venda vendaSalva = vendaRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
-
-		return vendaSalva;
-	}
-	
-	
 	
 	public Venda save(@Valid Venda venda) {
 		totalCompra = BigDecimal.ZERO;
+		
 		
 		venda.getProdutos().forEach(p -> {
 			Produto produto = produtoRepository.findById(p.getId()).get();
@@ -61,6 +46,26 @@ public class VendaService {
 		});
 
 		return vendaRepository.save(venda);
+	}
+	
+	public Venda atualizar(Long id, @Valid Venda venda) {
+		Venda vendaSalva = buscarVendaPeloId(id);
+
+		BeanUtils.copyProperties(venda, vendaSalva, "id");
+
+		return vendaRepository.save(vendaSalva);
+	}
+
+	public void excluir(Long id) {
+		Venda venda = buscarVendaPeloId(id);
+
+		vendaRepository.delete(venda);
+	}
+	
+	private Venda buscarVendaPeloId(Long id) {
+		Venda venda = vendaRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
+
+		return venda;
 	}
 
 }

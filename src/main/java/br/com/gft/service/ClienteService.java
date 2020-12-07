@@ -37,7 +37,11 @@ public class ClienteService {
 		return clienteRepository.save(clienteSalvo);
 	}
 	
-
+	public void excluir(Long id) {
+		Cliente cliente = buscarClientePeloId(id);
+		clienteRepository.delete(cliente);	
+	}
+	
 	private Cliente buscarClientePeloId(Long id) {
 		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
 

@@ -29,11 +29,19 @@ public class FornecedorService {
 		return fornecedorRepository.save(fornecedorSalvo);
 	}
 	
+	public void excluir(Long id) {
+		Fornecedor fornecedor = buscarFornecedorPeloId(id);
+		
+		fornecedorRepository.delete(fornecedor);
+	}
+	
 
 	private Fornecedor buscarFornecedorPeloId(Long id) {
 		Fornecedor fornecedor = fornecedorRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
 
 		return fornecedor;
 	}
+
+	
 
 }

@@ -12,7 +12,7 @@ insert into fornecedor (nome, cnpj) values ('Rhyzio', '49.611.663/0001-31');
 insert into fornecedor (nome, cnpj) values ('Browsecat', '38.571.372/0001-40');
 insert into fornecedor (nome, cnpj) values ('Eayo', '73.556.011/0001-26');
 insert into fornecedor (nome, cnpj) values ('Yata', '96.540.264/0001-07');
-insert into fornecedor (nome, cnpj) values ('Centizu', '96.540.264/0001-07');
+insert into fornecedor (nome, cnpj) values ('Centizu', '37.484.024/0001-73');
 insert into fornecedor (nome, cnpj) values ('Tazzy', '84.434.681/0001-96');
 insert into fornecedor (nome, cnpj) values ('Zoomcast', '53.181.642/0001-09');
 insert into fornecedor (nome, cnpj) values ('Twimbo', '34.136.555/0001-87');

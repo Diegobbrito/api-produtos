@@ -18,19 +18,19 @@ import lombok.NoArgsConstructor;
 public class ClienteRequestDTO {
 	
 	@ApiModelProperty(example = "Diego")
-	@NotNull
+	@NotNull(message = "O nome não pode estar vazio")
 	private String nome;
 	
 	@ApiModelProperty(example = "email@email.com")
-	@NotEmpty
+	@NotEmpty(message = "O email não pode estar vazio")
 	@Email(message = "Email inválido")
 	private String email;
 	
-	@NotEmpty
+	@NotEmpty(message = "A senha não pode ser nula")
 	private String senha;
 	
 	@ApiModelProperty(value = "CPF de um cliente", example = "xxx.xxx.xx-xx")
-	@NotEmpty
+	@NotEmpty(message = "O documento não pode estar vazio")
 	@CPF(message = "CPF inválido")
 	private String documento;
 	

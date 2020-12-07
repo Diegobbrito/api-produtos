@@ -103,7 +103,7 @@ public class ProdutoResource {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@ApiParam(value = "Codigo de uma pessoa", example = "1") @PathVariable Long id) {
-		produtoRepository.deleteById(id);
+		produtoService.excluir(id);
 	}
 
 	private Produto toDomainObject(ProdutoRequestDTO produtoRequestDTO){

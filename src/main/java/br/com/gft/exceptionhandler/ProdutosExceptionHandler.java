@@ -3,8 +3,10 @@ package br.com.gft.exceptionhandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import org.apache.tomcat.util.ExceptionUtils;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -65,7 +67,29 @@ public class ProdutosExceptionHandler extends ResponseEntityExceptionHandler {
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
+	
+	@ExceptionHandler({ConstraintViolationException.class})
+	public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
+			 WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null,
+				LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler({NoSuchElementException.class})
+	public ResponseEntity<Object> handleConstraintViolationException(NoSuchElementException ex,
+			 WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null,
+				LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
 
+	
+	
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
 		List<Erro> erros = new ArrayList<>();
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {

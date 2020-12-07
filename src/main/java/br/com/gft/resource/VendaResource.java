@@ -2,20 +2,13 @@ package br.com.gft.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import br.com.gft.dto.request.ProdutoRequestDTO;
-import br.com.gft.dto.request.VendaRequestDTO;
-import br.com.gft.dto.response.VendaResponseDTO;
-import br.com.gft.model.Cliente;
-import br.com.gft.model.Fornecedor;
-import br.com.gft.model.Produto;
-import br.com.gft.repository.ClienteRepository;
-import br.com.gft.repository.FornecedorRepository;
-import br.com.gft.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.gft.dto.request.VendaRequestDTO;
+import br.com.gft.dto.response.VendaResponseDTO;
+import br.com.gft.model.Cliente;
+import br.com.gft.model.Fornecedor;
+import br.com.gft.model.Produto;
 import br.com.gft.model.Venda;
+import br.com.gft.repository.ClienteRepository;
+import br.com.gft.repository.FornecedorRepository;
+import br.com.gft.repository.ProdutoRepository;
 import br.com.gft.repository.VendaRepository;
 import br.com.gft.service.VendaService;
 import io.swagger.annotations.Api;
@@ -102,7 +103,7 @@ public class VendaResource {
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@ApiParam(value = "ID de uma venda", example = "1") @PathVariable Long id) {
-        vendaRepository.deleteById(id);
+    	vendaService.excluir(id);
     }
 
     private Venda toDomainObject(VendaRequestDTO vendaRequestDTO) {
@@ -120,25 +121,31 @@ public class VendaResource {
             venda.setCliente(cliente);
         }
 
-        List<Produto> listProdutos = new ArrayList();
-        if (!vendaRequestDTO.getProdutos().isEmpty()) {
-            vendaRequestDTO.getProdutos()
-                    .stream().filter(produtosId -> produtoRepository.findById(produtosId.getId()).isPresent())
-                    .map(produtosId -> produtoRepository.findById(produtosId.getId()).get())
-                    .forEach(produto -> {
-                        if (produto.getFornecedor().getId() == vendaRequestDTO.getFornecedor().getId())
-                            listProdutos.add(produto);
-                        else {
-                            try {
-                                throw new Exception();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-            venda.setProdutos(listProdutos);
-        }
+        if(vendaRequestDTO.getProdutos().isEmpty()) {
+			throw new DataIntegrityViolationException("Produtos inválidos");
+		}else {
+			List<Produto> listProdutos = new ArrayList<Produto>();
+			
+			long fornecedorId = vendaRequestDTO.getFornecedor().getId();
+			
+			vendaRequestDTO.getProdutos().forEach(produtosId -> {
+				
+				if(produtoRepository.findById(produtosId.getId()).isEmpty()) {
+					throw new NoSuchElementException("Produto não existe com o id " + produtosId.getId());
+				}
+					Produto produto = produtoRepository.findById(produtosId.getId()).get();
+							
+				if (produto.getFornecedor().getId() == fornecedorId) {
+					listProdutos.add(produto);                        	
+				}
+				else {
+					throw new DataIntegrityViolationException("Produtos não são do mesmo fornecedor");
+				}
+			});
 
+			venda.setProdutos(listProdutos);
+		}
+        
         return venda;
     }
 

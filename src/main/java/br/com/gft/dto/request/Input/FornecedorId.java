@@ -1,15 +1,13 @@
 package br.com.gft.dto.request.Input;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-
-import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter
 public class FornecedorId {
 
-	@ApiModelProperty(value = "Id do fornecedor de um produto", example = "1")
-	@NotNull
+	@ApiModelProperty(example = "1")
 	public long id;
 }

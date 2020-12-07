@@ -108,7 +108,7 @@ public class FornecedorResource {
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@ApiParam(example = "1") @PathVariable Long id) {
-		fornecedorRepository.deleteById(id);
+		fornecedorService.excluir(id);
 	}
 
 }

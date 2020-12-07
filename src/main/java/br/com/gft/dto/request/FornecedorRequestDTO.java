@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class FornecedorRequestDTO {
 				
 		@ApiModelProperty(example = "Amazon")
-		@NotNull
+		@NotNull(message = "O nome não pode ser nulo")
 		private String nome;
 		
 		@ApiModelProperty(example = "xx.xxx.xxx/xxxx-xx")
-		@NotNull
+		@NotNull(message = "O CNPJ não pode ser nulo")
 		@CNPJ
 		private String cnpj;
 		
