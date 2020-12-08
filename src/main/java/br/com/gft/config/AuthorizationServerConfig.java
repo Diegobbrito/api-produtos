@@ -21,11 +21,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
-		.withClient("angular")
-		.secret("angular")
+		.withClient("User")
+		.secret("user")
 		.scopes("read", "write")
 		.authorizedGrantTypes("password")
-		.accessTokenValiditySeconds(1800);
+		.accessTokenValiditySeconds(3600);
 	}
 
 	@Override
@@ -39,7 +39,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public TokenStore tokenStore() {
 		return new InMemoryTokenStore();
 	}
-	
-	
 
 }
