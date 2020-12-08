@@ -1,32 +1,30 @@
 package br.com.gft.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
 import br.com.gft.service.UsuarioDetailsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Configuration
 @EnableWebSecurity
-@EnableResourceServer
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+@Slf4j
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final UsuarioDetailsService usuarioDetailsService;
 
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-		auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ROLE");
+		log.info("Teste de password {}", passwordEncoder.encode("admin") );
 		auth.userDetailsService(usuarioDetailsService).passwordEncoder(passwordEncoder);
 	}
 
@@ -37,16 +35,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 			.antMatchers("/v2/api-docs").permitAll() 																									
 			.antMatchers("/swagger-ui/*").permitAll()
 			.antMatchers("/swagger-resources/**").permitAll()
-			.anyRequest().permitAll()
-//			.anyRequest().authenticated()
+			.anyRequest().authenticated()
 			.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.httpBasic()
 			.and()
-				.csrf().disable();
+				.csrf().disable()
+				;
 	}
 
-	@Override
-	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-		resources.stateless(true);
-	}
+
 }
