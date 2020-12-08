@@ -21,8 +21,7 @@ public class ClienteService {
 
 	public Cliente save(@Valid Cliente cliente) {
 
-		String senha = BCrypt.hashpw(cliente.getSenha(), BCrypt.gensalt());
-		cliente.setSenha(senha);
+		gerarSenha(cliente);
 		
 		cliente.setDataCadastro(LocalDate.now());
 		
@@ -33,13 +32,21 @@ public class ClienteService {
 		Cliente clienteSalvo = buscarClientePeloId(id);
 
 		BeanUtils.copyProperties(cliente, clienteSalvo, "id");
-
+		
+		clienteSalvo.setDataCadastro(LocalDate.now());
+		gerarSenha(clienteSalvo);
+		
 		return clienteRepository.save(clienteSalvo);
 	}
 	
 	public void excluir(Long id) {
 		Cliente cliente = buscarClientePeloId(id);
 		clienteRepository.delete(cliente);	
+	}
+	
+	private void gerarSenha(Cliente cliente) {
+		String senha = BCrypt.hashpw(cliente.getSenha(), BCrypt.gensalt());
+		cliente.setSenha(senha);
 	}
 	
 	private Cliente buscarClientePeloId(Long id) {

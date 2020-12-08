@@ -11,12 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.gft.service.UsuarioDetailsService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final UsuarioDetailsService usuarioDetailsService;
@@ -24,7 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-		log.info("Teste de password {}", passwordEncoder.encode("admin") );
 		auth.userDetailsService(usuarioDetailsService).passwordEncoder(passwordEncoder);
 	}
 
@@ -39,8 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.httpBasic()
 			.and()
-				.csrf().disable()
-				;
+				.csrf().disable();
 	}
 
 

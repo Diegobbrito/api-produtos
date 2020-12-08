@@ -96,9 +96,9 @@ public class FornecedorResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Fornecedor> atualizar(
 			@ApiParam(example = "1") @PathVariable Long id,
-			@ApiParam(name = "corpo", value = "Representação de um fornecedor com novos dados") @Valid @RequestBody Fornecedor fornecedor) {
+			@ApiParam(name = "corpo", value = "Representação de um fornecedor com novos dados") @Valid @RequestBody FornecedorRequestDTO fornecedor) {
 
-		Fornecedor fornecedorSalvo = fornecedorService.atualizar(id, fornecedor);
+		Fornecedor fornecedorSalvo = fornecedorService.atualizar(id, fornecedor.build());
 
 		return ResponseEntity.ok(fornecedorSalvo);
 	}

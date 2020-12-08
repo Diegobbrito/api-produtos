@@ -91,9 +91,11 @@ public class VendaResource {
     @PutMapping("/{id}")
     public ResponseEntity<Venda> atualizar(
             @ApiParam(value = "ID de um produto", example = "1") @PathVariable Long id,
-            @ApiParam(name = "corpo", value = "Representação de uma venda com novos dados") @Valid @RequestBody Venda venda) {
+            @ApiParam(name = "corpo", value = "Representação de uma venda com novos dados") @Valid @RequestBody VendaRequestDTO vendaRequestDTO) {
 
-        Venda vendaSalva = vendaService.atualizar(id, venda);
+    	Venda venda = toDomainObject(vendaRequestDTO);
+    	
+    	Venda vendaSalva = vendaService.atualizar(id, venda);
 
         return ResponseEntity.ok(vendaSalva);
     }

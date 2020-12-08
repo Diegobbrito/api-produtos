@@ -92,11 +92,13 @@ public class ProdutoResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Produto> atualizar(
 			@ApiParam(value = "ID de um produto", example = "1") @PathVariable Long id,
-			@ApiParam(name = "corpo", value = "Representação de um produto com novos dados") @Valid @RequestBody Produto produto) {
+			@ApiParam(name = "corpo", value = "Representação de um produto com novos dados") @Valid @RequestBody ProdutoRequestDTO produtoRequestDTO) {
 
-		Produto produtoSalvo = produtoService.atualizar(id, produto);
+		Produto produto = toDomainObject(produtoRequestDTO);
+		
+		Produto produtoAtualizado = produtoService.atualizar(id, produto);
 
-		return ResponseEntity.ok(produtoSalvo);
+		return ResponseEntity.ok(produtoAtualizado);
 	}
 
 	@ApiOperation("Exclui produto")

@@ -38,8 +38,6 @@ public class ClienteResource {
 	@Autowired
 	private ClienteService clienteService;
 
-//	@Autowired
-//	private ApplicationEventPublisher publisher;
 
 	@ApiOperation("Lista todos os clientes")
 	@GetMapping
@@ -49,62 +47,54 @@ public class ClienteResource {
 	
 	@ApiOperation("Listar os clientes em ordem alfabética crescente por nome")
 	@GetMapping("/asc")
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public List<Cliente> listarAsc() {
 		return clienteRepository.findAllOrderByNome();
 	}
 	
 	@ApiOperation("Listar os clientes em ordem alfabética decrescente por nome")
 	@GetMapping("/desc")
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public List<Cliente> listarDesc() {
 		return clienteRepository.findAllOrderByNomeDesc();
 	}
 	
 	@ApiOperation("Buscar clientes por nome")
 	@GetMapping("/nome/{nome}")
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public List<Cliente> buscarPorNome(@PathVariable String nome) {
 		return clienteRepository.findByNomeContaining(nome);
 	}
-
-	@ApiOperation("Cria um novo cliente")
-	@PostMapping				
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public ResponseEntity<ClienteResponseDTO> criar(		
-			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody ClienteRequestDTO cliente,
-			HttpServletResponse response) {
-		Cliente clienteSalvo = clienteService.save(cliente.build());
-		
-//		publisher.publishEvent(new RecursoCriadoEvent(this, response, clienteSalvo.getCodigo()));
-		return new ResponseEntity<>(ClienteResponseDTO.response(clienteSalvo), HttpStatus.CREATED);
-
-	}
-
+	
 	@ApiOperation("Busca um cliente pelo ID")
 	@GetMapping("/{id}")
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<Cliente> buscarPeloId(
 			@ApiParam(value = "Id de um cliente", example = "1") @PathVariable Long id) {
 		Cliente cliente = clienteRepository.findById(id).isPresent() ? clienteRepository.findById(id).get() : null;
 		return cliente == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(cliente);
 	}
-	
+
+	@ApiOperation("Cria um novo cliente")
+	@PostMapping				
+	public ResponseEntity<ClienteResponseDTO> criar(		
+			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody ClienteRequestDTO cliente,
+			HttpServletResponse response) {
+		Cliente clienteSalvo = clienteService.save(cliente.build());
+
+		return new ResponseEntity<>(ClienteResponseDTO.response(clienteSalvo), HttpStatus.CREATED);
+
+	}
+
 	@ApiOperation("Atualizar cliente")
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@PutMapping("/{id}")
-	public ResponseEntity<Cliente> atualizar(
+	public ResponseEntity<ClienteResponseDTO> atualizar(
 			@ApiParam(example = "1") @PathVariable Long id,
-			@ApiParam(name = "corpo", value = "Representação de um cliente com novos dados") @Valid @RequestBody Cliente cliente) {
+			@ApiParam(name = "corpo", value = "Representação de um cliente com novos dados") @Valid @RequestBody ClienteRequestDTO cliente) {
 
-		Cliente clienteSalvo = clienteService.atualizar(id, cliente);
+		Cliente clienteSalvo = clienteService.atualizar(id, cliente.build());
 
-		return ResponseEntity.ok(clienteSalvo);
+		return new ResponseEntity<>(ClienteResponseDTO.response(clienteSalvo), HttpStatus.OK);
 	}
 
 	@ApiOperation("Exclui cliente")
 	@DeleteMapping("/{id}")
-//	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@ApiParam(example = "1") @PathVariable Long id) {
 		clienteService.excluir(id);
