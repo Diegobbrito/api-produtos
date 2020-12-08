@@ -23,6 +23,7 @@ import br.com.gft.dto.response.ClienteResponseDTO;
 import br.com.gft.model.Cliente;
 import br.com.gft.repository.ClienteRepository;
 import br.com.gft.service.ClienteService;
+import br.com.gft.service.MapService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,30 +38,33 @@ public class ClienteResource {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	  @Autowired
+	    private MapService mapService;
 
 
 	@ApiOperation("Lista todos os clientes")
 	@GetMapping
-	public List<Cliente> listar() {
-		return clienteRepository.findAll();
+	public List<ClienteResponseDTO> listar() {
+		return mapService.listarTodos();
 	}
 	
 	@ApiOperation("Listar os clientes em ordem alfabética crescente por nome")
 	@GetMapping("/asc")
-	public List<Cliente> listarAsc() {
-		return clienteRepository.findAllOrderByNome();
+	public List<ClienteResponseDTO> listarAsc() {
+		return mapService.listarAsc();
 	}
 	
 	@ApiOperation("Listar os clientes em ordem alfabética decrescente por nome")
 	@GetMapping("/desc")
-	public List<Cliente> listarDesc() {
-		return clienteRepository.findAllOrderByNomeDesc();
+	public List<ClienteResponseDTO> listarDesc() {
+		return mapService.listarDesc();
 	}
 	
 	@ApiOperation("Buscar clientes por nome")
 	@GetMapping("/nome/{nome}")
-	public List<Cliente> buscarPorNome(@PathVariable String nome) {
-		return clienteRepository.findByNomeContaining(nome);
+	public List<ClienteResponseDTO> buscarPorNome(@PathVariable String nome) {
+		return mapService.buscarPorNome(nome);
 	}
 	
 	@ApiOperation("Busca um cliente pelo ID")
