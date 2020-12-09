@@ -23,6 +23,7 @@ import br.com.gft.dto.response.FornecedorResponseDTO;
 import br.com.gft.model.Fornecedor;
 import br.com.gft.repository.FornecedorRepository;
 import br.com.gft.service.FornecedorService;
+import br.com.gft.service.map.MapFornecedorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,27 +38,30 @@ public class FornecedorResource {
 	
 	@Autowired
 	private FornecedorService fornecedorService;
+	
+	@Autowired
+	MapFornecedorService mapService;
 
 	@ApiOperation("Listar todos os fornecedores")
 	@GetMapping
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public List<Fornecedor> listar() {
-		return fornecedorRepository.findAll();
+	public List<FornecedorResponseDTO> listar() {
+		return mapService.listarTodos();
 	}
 
 	@ApiOperation("Listar os fornecedores em ordem alfabética crescente por nome")
 	@GetMapping("/asc")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public List<Fornecedor> listarAsc() {
+	public List<FornecedorResponseDTO> listarAsc() {
 
-		return fornecedorRepository.findAllOrderByNome();
+		return mapService.listarAsc();
 	}
 
 	@ApiOperation("Listar os fornecedores em ordem alfabética decrescente por nome")
 	@GetMapping("/desc")
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-	public List<Fornecedor> listarDesc() {
-		return fornecedorRepository.findAllOrderByNomeDesc();
+	public List<FornecedorResponseDTO> listarDesc() {
+		return mapService.listarDesc();
 	}
 
 	@ApiOperation("Buscar fornecedores por nome")

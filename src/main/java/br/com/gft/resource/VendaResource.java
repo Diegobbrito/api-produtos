@@ -32,6 +32,7 @@ import br.com.gft.repository.FornecedorRepository;
 import br.com.gft.repository.ProdutoRepository;
 import br.com.gft.repository.VendaRepository;
 import br.com.gft.service.VendaService;
+import br.com.gft.service.map.MapVendaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -52,6 +53,9 @@ public class VendaResource {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+    
+    @Autowired
+    private MapVendaService mapService;
 
     @Autowired
     private VendaService vendaService;
@@ -59,8 +63,8 @@ public class VendaResource {
     @ApiOperation("Listar todas as vendas")
     @GetMapping
 //	@ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
-    public List<Venda> listar() {
-        return vendaRepository.findAll();
+    public List<VendaResponseDTO> listar() {
+        return mapService.listarTodos();
     }
 
     @ApiOperation("Buscar por ID")

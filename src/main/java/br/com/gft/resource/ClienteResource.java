@@ -23,7 +23,7 @@ import br.com.gft.dto.response.ClienteResponseDTO;
 import br.com.gft.model.Cliente;
 import br.com.gft.repository.ClienteRepository;
 import br.com.gft.service.ClienteService;
-import br.com.gft.service.MapService;
+import br.com.gft.service.map.MapClienteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -35,38 +35,37 @@ public class ClienteResource {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
-	
+
 	@Autowired
 	private ClienteService clienteService;
-	
-	  @Autowired
-	    private MapService mapService;
 
+	@Autowired
+	private MapClienteService mapService;
 
 	@ApiOperation("Lista todos os clientes")
 	@GetMapping
 	public List<ClienteResponseDTO> listar() {
 		return mapService.listarTodos();
 	}
-	
+
 	@ApiOperation("Listar os clientes em ordem alfabética crescente por nome")
 	@GetMapping("/asc")
 	public List<ClienteResponseDTO> listarAsc() {
 		return mapService.listarAsc();
 	}
-	
+
 	@ApiOperation("Listar os clientes em ordem alfabética decrescente por nome")
 	@GetMapping("/desc")
 	public List<ClienteResponseDTO> listarDesc() {
 		return mapService.listarDesc();
 	}
-	
+
 	@ApiOperation("Buscar clientes por nome")
 	@GetMapping("/nome/{nome}")
 	public List<ClienteResponseDTO> buscarPorNome(@PathVariable String nome) {
 		return mapService.buscarPorNome(nome);
 	}
-	
+
 	@ApiOperation("Busca um cliente pelo ID")
 	@GetMapping("/{id}")
 	public ResponseEntity<Cliente> buscarPeloId(
@@ -76,8 +75,8 @@ public class ClienteResource {
 	}
 
 	@ApiOperation("Cria um novo cliente")
-	@PostMapping				
-	public ResponseEntity<ClienteResponseDTO> criar(		
+	@PostMapping
+	public ResponseEntity<ClienteResponseDTO> criar(
 			@ApiParam(name = "corpo", value = "Representação de um novo cliente") @Valid @RequestBody ClienteRequestDTO cliente,
 			HttpServletResponse response) {
 		Cliente clienteSalvo = clienteService.save(cliente.build());
@@ -88,8 +87,7 @@ public class ClienteResource {
 
 	@ApiOperation("Atualizar cliente")
 	@PutMapping("/{id}")
-	public ResponseEntity<ClienteResponseDTO> atualizar(
-			@ApiParam(example = "1") @PathVariable Long id,
+	public ResponseEntity<ClienteResponseDTO> atualizar(@ApiParam(example = "1") @PathVariable Long id,
 			@ApiParam(name = "corpo", value = "Representação de um cliente com novos dados") @Valid @RequestBody ClienteRequestDTO cliente) {
 
 		Cliente clienteSalvo = clienteService.atualizar(id, cliente.build());

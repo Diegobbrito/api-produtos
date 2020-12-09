@@ -1,4 +1,4 @@
-package br.com.gft.service;
+package br.com.gft.service.map;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import br.com.gft.model.Cliente;
 import br.com.gft.repository.ClienteRepository;
 
 @Service
-public class MapService {
+public class MapClienteService {
 
 	@Autowired
 	private ClienteRepository clientRepository;

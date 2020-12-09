@@ -4,9 +4,11 @@ import br.com.gft.model.Fornecedor;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class FornecedorResponseDTO {
 	
 	@ApiModelProperty(example = "1")
