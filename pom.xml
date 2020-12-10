@@ -14,10 +14,6 @@
 	<name>projeto-api</name>
 	<description>Projeto API Produtos</description>
 
-	<properties>
-		<java.version>8</java.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
