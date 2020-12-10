@@ -137,7 +137,7 @@ public class VendaResource {
 			vendaRequestDTO.getProdutos().forEach(produtosId -> {
 				
 				if(produtoRepository.findById(produtosId.getId()).isEmpty()) {
-					throw new NoSuchElementException("Produto não existe com o id " + produtosId.getId());
+					throw new NoSuchElementException("Produto não encontrado para o id " + produtosId.getId());
 				}
 					Produto produto = produtoRepository.findById(produtosId.getId()).get();
 							
