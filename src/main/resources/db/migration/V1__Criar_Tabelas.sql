@@ -11,9 +11,10 @@ create sequence venda_seq;
 
 create table venda (id bigint not null default nextval ('venda_seq'), data_compra timestamp(6), total_compra decimal(19,2), cliente_id bigint not null, fornecedor_id bigint not null, primary key (id)) ;
 create table venda_produto (venda_id bigint not null, produto_id bigint not null) ;
-create sequence usuario_seq;
 
-create table usuario (id bigint not null default nextval ('usuario_seq'), username varchar(255), password varchar(255), authorities varchar(255),primary key (id)) ;
+create sequence usuario_seq;
+create table usuario (id bigint not null default nextval ('usuario_seq'), username varchar(255), password varchar(255), authorities varchar(255),primary key (id));
+
 alter table cliente add constraint Cliente_CPF_Unico unique (documento);
 alter table fornecedor add constraint Fornecedor_CNPJ_Unico unique (cnpj);
 alter table produto add constraint FKg0kbs9pp5getbcfp892wf3y1c foreign key (id_fornecedor) references fornecedor (id) ON UPDATE CASCADE ON DELETE CASCADE;
